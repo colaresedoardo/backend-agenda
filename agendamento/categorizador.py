@@ -13,8 +13,9 @@ def normalizacao_servico(texto):
     no máximo 30 palavras. 
     Essa descrição deve ser escrita como descricao.
     Após receber a entrada, você retornará o array json com os valores.
-    O resultado deve vir da seguinte maneira:
-        nome: nome do serviço, valor: valor numérico apenas, descricao:descrição do texto
+    O resultado deve vir em um array da seguinte maneira:[{{
+        nome: nome do serviço, valor: valor numérico apenas, descricao:descrição do texto}}].
+        Caso seja um serviço, o array deverá ser apenas de um valor.
     """
     dotenv.load_dotenv()
     openai.api_key = os.getenv("OPENAI_SECRET_KEY")

@@ -1,11 +1,14 @@
 from rest_framework import serializers
-from .models import Evento, Servico
+from .models import Evento, Servico, Cliente, Profissional
 
 
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
-        fields = '__all__'
+        fields = ['data_inicio', 'data_fim', 'servico', 'profissional', 
+                  'horario', 'nome', 'numero']
+    nome = serializers.CharField(required=False)
+    numero = serializers.CharField(required=False)
         
 
 class ServicoSerializer(serializers.ModelSerializer):
@@ -16,3 +19,16 @@ class ServicoSerializer(serializers.ModelSerializer):
     valor = serializers.DecimalField(required=False, max_digits=10, 
                                      decimal_places=2)
     descricao = serializers.CharField(required=False)
+    usuario = serializers.CharField(required=False)
+    
+
+class ClienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cliente
+        fields = '__all__'
+        
+        
+class ProfissionalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profissional
+        fields = '__all__'

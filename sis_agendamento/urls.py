@@ -44,8 +44,9 @@ urlpatterns = [
          name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), 
          name='schema-redoc'),
-    path('api/', include(agendamento.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/verify/', CustomTokenVerifyView.as_view(), 
          name='token_verify'),
+    path('api/', include(agendamento.urls)),
+
 ]
