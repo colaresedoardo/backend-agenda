@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Evento, Servico, Cliente, Profissional
+from .models import Evento, Servico, Cliente, Profissional, Configuracao
 
 
 class EventoSerializer(serializers.ModelSerializer):
@@ -31,4 +31,10 @@ class ClienteSerializer(serializers.ModelSerializer):
 class ProfissionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profissional
+        fields = '__all__'
+        
+
+class ConfiguracaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Configuracao
         fields = '__all__'

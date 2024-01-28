@@ -1,8 +1,10 @@
 
 # Create your views here.
 from rest_framework import generics
-from .models import Evento, Servico, Cliente, Profissional
-from .serializers import EventoSerializer, ServicoSerializer, ClienteSerializer, ProfissionalSerializer
+from .models import Evento, Servico, Cliente, Profissional, Configuracao
+from .serializers import (EventoSerializer, ServicoSerializer,
+                          ClienteSerializer, ProfissionalSerializer,
+                          ConfiguracaoSerializer)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import viewsets, serializers
@@ -96,7 +98,14 @@ class ClienteView(viewsets.ModelViewSet):
     serializer_class = ClienteSerializer
     permission_classes = [IsAuthenticated]
     
+    
 class ProfissionalView(viewsets.ModelViewSet):
     queryset = Profissional.objects.all()
     serializer_class = ProfissionalSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class ConfiguracaolView(viewsets.ModelViewSet):
+    queryset = Configuracao.objects.all()
+    serializer_class = ConfiguracaoSerializer
     permission_classes = [IsAuthenticated]

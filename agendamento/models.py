@@ -44,3 +44,13 @@ class Evento(models.Model):
     
     def __str__(self):
         return self.servico.nome
+    
+    
+class Configuracao(models.Model):
+    identificador_whatsapp_business = models.CharField(max_length=200,  
+                                                       default='', null=True)
+    intervalo_entre_horario = models.IntegerField(max_length=10, 
+                                                  default=30, null=True)
+    horario_inicial = models.TimeField(null=True)
+    horario_final = models.TimeField(null=True)
+    
