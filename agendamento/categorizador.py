@@ -2,7 +2,7 @@ import openai
 import dotenv
 import os
 import json
-
+from decouple import config
 
 def normalizacao_servico(texto):
     prompt_sistema = f"""
@@ -18,7 +18,7 @@ def normalizacao_servico(texto):
         Caso seja um serviço, o array deverá ser apenas de um valor.
     """
     dotenv.load_dotenv()
-    openai.api_key = os.getenv("OPENAI_SECRET_KEY")
+    openai.api_key = config('OPENAI_SECRET_KEY')
     resposta = openai.ChatCompletion.create(model="gpt-3.5-turbo",
                                             messages=[
                                                 {"role": "system",
