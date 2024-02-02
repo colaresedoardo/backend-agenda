@@ -11,8 +11,8 @@ from rest_framework import viewsets, serializers
 from .categorizador import normalizacao_servico
 from rest_framework.response import Response
 from rest_framework import status
-
-
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import EventoFilter
 class EventoListCreateView(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
@@ -30,7 +30,8 @@ class EventoDetailView(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
     permission_classes = [IsAuthenticated]
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = EventoFilter
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return EventoListView

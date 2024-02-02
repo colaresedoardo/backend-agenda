@@ -12,21 +12,21 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+import dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+dotenv.load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ms2jdzaz+onu#!i-%*j6at91l5+23_3j)50)ht7y6@t)$pbfn+'
-
+SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -88,11 +88,11 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'agendamento',
-        'USER': 'postgres',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',  # Pode ser 'localhost' se estiver rodando localmente
-        'PORT': '5432',       # Porta padrão do PostgreSQL
+        'NAME':os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),  # Pode ser 'localhost' se estiver rodando localmente
+        'PORT': os.getenv('DATABASE_PORT'),       # Porta padrão do PostgreSQL
     }
 }
 
@@ -160,7 +160,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True

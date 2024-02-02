@@ -53,4 +53,9 @@ class Configuracao(models.Model):
                                                   default=30, null=True)
     horario_inicial = models.TimeField(null=True)
     horario_final = models.TimeField(null=True)
+    data_inicial = models.DateField(null=True)
+    data_final = models.DateField(null=True)
+    trabalha_fim_semana =models.BooleanField(default=False)
+    horario_inicial_sabado = models.TimeField(null=True)
+    horario_final_sabado = models.TimeField(null=True)
     

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8004
+    volumes:
+      - .:/app
+    ports:
+      - 8004:8004
+    env_file:
+      - .env.dev  # Referência ao arquivo externo
+    depends_on:
+      - db
+    networks:
+      - rede-agendamento
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: agendamento
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - 5432:5432
+    networks:
+      - rede-agendamento
+
+networks:
+  rede-agendamento:
