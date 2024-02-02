@@ -1,0 +1,1 @@
+web: gunicorn sis_agendamento.wsgi --log-file -
