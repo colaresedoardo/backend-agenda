@@ -5,7 +5,7 @@ from .models import Evento, Servico, Cliente, Profissional, Configuracao
 from .serializers import (EventoSerializer, ServicoSerializer,
                           ClienteSerializer, ProfissionalSerializer,
                           ConfiguracaoSerializer)
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import viewsets, serializers
 from .categorizador import normalizacao_servico
@@ -13,10 +13,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import EventoFilter
+
+class ConsultaPublicaPermissao(BasePermission):
+    def has_permission(self, request, view):
+        # Permite acesso público apenas para solicitações de consulta (GET)
+        return request.method == 'GET'
+
 class EventoListCreateView(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
 
 
@@ -29,7 +35,7 @@ class EventoListView(serializers.ModelSerializer):
 class EventoDetailView(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [ConsultaPublicaPermissao]
     filter_backends = [DjangoFilterBackend]
     filterset_class = EventoFilter
     def get_serializer_class(self):
@@ -75,7 +81,7 @@ class EventoDetailView(viewsets.ModelViewSet):
 class ServicoViewSet(viewsets.ModelViewSet):
     queryset = Servico.objects.all()
     serializer_class = ServicoSerializer
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [ConsultaPublicaPermissao, ]
 
     
     def create(self, request, *args, **kwargs):
@@ -97,16 +103,16 @@ class ServicoViewSet(viewsets.ModelViewSet):
 class ClienteView(viewsets.ModelViewSet):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [ConsultaPublicaPermissao]
     
     
 class ProfissionalView(viewsets.ModelViewSet):
     queryset = Profissional.objects.all()
     serializer_class = ProfissionalSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [ConsultaPublicaPermissao]
 
 
 class ConfiguracaolView(viewsets.ModelViewSet):
     queryset = Configuracao.objects.all()
     serializer_class = ConfiguracaoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [ConsultaPublicaPermissao]
