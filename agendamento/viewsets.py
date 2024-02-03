@@ -18,7 +18,14 @@ class ConsultaPublicaPermissao(BasePermission):
     def has_permission(self, request, view):
         # Permite acesso público apenas para solicitações de consulta (GET)
         return request.method == 'GET'
-
+    
+class EventoPermissao(BasePermission):
+    def has_permission(self, request, view):
+        # Permite acesso público apenas para solicitações de consulta (GET)
+        if (request.method == 'GET'):
+            return request.method == 'GET'
+        if (request.method == 'POST'):
+            return request.method == 'POST'
 class EventoListCreateView(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
@@ -32,10 +39,11 @@ class EventoListView(serializers.ModelSerializer):
         fields = ['data_inicio', 'data_fim', 'servico', 'profissional', 
                   'horario', 'cliente']
         
+
 class EventoDetailView(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    permission_classes = [ConsultaPublicaPermissao]
+    permission_classes = [EventoPermissao]
     filter_backends = [DjangoFilterBackend]
     filterset_class = EventoFilter
     def get_serializer_class(self):
@@ -66,7 +74,7 @@ class EventoDetailView(viewsets.ModelViewSet):
                 "profissional": profissional,
                 "cliente": cliente
             }
-            instancia = Evento(**data, usuario=request.user)
+            instancia = Evento(**data)
             instancia.save()
             if instancia.id:
                 return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)

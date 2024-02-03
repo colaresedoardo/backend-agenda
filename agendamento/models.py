@@ -36,7 +36,6 @@ class Cliente(models.Model):
 class Evento(models.Model):
     data_inicio = models.DateField(null=True)
     data_fim = models.DateField(null=True)
-    usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     servico = models.ForeignKey(Servico, on_delete=models.DO_NOTHING)
     profissional = models.ForeignKey(Profissional, on_delete=models.DO_NOTHING)
     horario = models.TimeField(null=True)
