@@ -99,7 +99,7 @@ class EventoDetailView(viewsets.ModelViewSet):
 class ServicoViewSet(viewsets.ModelViewSet):
     queryset = Servico.objects.all()
     serializer_class = ServicoSerializer
-    permission_classes = [ConsultaPublicaPermissao, ]
+    permission_classes = [EventoPermissao, ]
     filter_backends = [DjangoFilterBackend]
     filterset_class = ServicoFilter
     
@@ -107,9 +107,12 @@ class ServicoViewSet(viewsets.ModelViewSet):
         print("aqui")
         # normalizacao_servico('')
         descricao = request.data['descricao']
+        grupo = request.data['grupo']
+        grupo_instancia = Grupo.objects.get(identificador=grupo)
         resultados = normalizacao_servico(descricao)
         print(resultados)
-        instancias = [Servico(**resultado, usuario=request.user) for resultado in resultados]
+        instancias = [Servico(**resultado, usuario=request.user,
+                              grupo=grupo_instancia) for resultado in resultados]
         insercoes = Servico.objects.bulk_create(instancias)
         if len(insercoes):
             return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)    
