@@ -9,5 +9,7 @@ router.register(r'profissional', viewsets.ProfissionalView,
                 basename='profissional')
 router.register(r'configuracao', viewsets.ConfiguracaolView, 
                 basename='configuração')
+router.register(r'grupo', viewsets.GroupView, 
+                basename='grupo')
 urlpatterns = router.urls
 

@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Evento, Servico, Cliente, Profissional, Configuracao
-
+from .models import Evento, Servico, Cliente, Profissional, Configuracao, Grupo
+from django.contrib.auth.models import Group
 
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
         fields = ['data_inicio', 'data_fim', 'servico', 'profissional', 
-                  'horario', 'nome', 'numero']
+                  'horario', 'nome', 'numero','grupo']
     nome = serializers.CharField(required=False)
     numero = serializers.CharField(required=False)
         
@@ -37,4 +37,10 @@ class ProfissionalSerializer(serializers.ModelSerializer):
 class ConfiguracaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Configuracao
+        fields = '__all__'
+
+
+class GrupoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Grupo
         fields = '__all__'

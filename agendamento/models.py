@@ -3,8 +3,15 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
 from django.db import models
-
+from django.contrib.auth.models import Group
     
+
+class Grupo (models.Model):
+    group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
+    identificador = models.CharField(max_length=255, db_index=True)
+    
+    def __str__(self):
+        return self.identificador
 class Servico(models.Model):
     nome = models.CharField(max_length=200, default='', null=True)
     valor = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True)
@@ -13,14 +20,14 @@ class Servico(models.Model):
     descricao_modelo_ia = models.TextField(max_length=500, blank=True, 
                                            null=True)
     tempo_servico = models.CharField(max_length=200, default='', null=True)
-    
+    grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return self.nome
     
     
 class Profissional(models.Model):
     nome = models.CharField(max_length=200, default='', null=True)
-    
+    grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return self.nome
 
@@ -28,7 +35,7 @@ class Profissional(models.Model):
 class Cliente(models.Model):
     nome = models.CharField(max_length=200,  default='', null=True)
     telefone = models.CharField(max_length=200,  default='', null=True)
-    
+    grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return self.nome
     
@@ -40,7 +47,7 @@ class Evento(models.Model):
     profissional = models.ForeignKey(Profissional, on_delete=models.DO_NOTHING)
     horario = models.TimeField(null=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING, null=True)
-    
+    grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return self.servico.nome
     
@@ -54,7 +61,8 @@ class Configuracao(models.Model):
     horario_final = models.TimeField(null=True)
     data_inicial = models.DateField(null=True)
     data_final = models.DateField(null=True)
-    trabalha_fim_semana =models.BooleanField(default=False)
+    trabalha_fim_semana = models.BooleanField(default=False)
     horario_inicial_sabado = models.TimeField(null=True)
     horario_final_sabado = models.TimeField(null=True)
-    
+    usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+    grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
