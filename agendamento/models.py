@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
     
 
 class Grupo (models.Model):
-    group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
+    usuario = models.ManyToManyField(User, null=True)
     identificador = models.CharField(max_length=255, db_index=True)
     
     def __str__(self):
