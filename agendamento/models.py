@@ -64,5 +64,6 @@ class Configuracao(models.Model):
     trabalha_fim_semana = models.BooleanField(default=False)
     horario_inicial_sabado = models.TimeField(null=True)
     horario_final_sabado = models.TimeField(null=True)
-    usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
     grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
+    trabalho_sabado = models.BooleanField(default=False)
+    trabalho_domingo = models.BooleanField(default=False)
