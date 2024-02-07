@@ -67,3 +67,5 @@ class Configuracao(models.Model):
     grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
     trabalho_sabado = models.BooleanField(default=False)
     trabalho_domingo = models.BooleanField(default=False)
+    horario_inicial_almoco = models.TimeField(null=True, default='12:00')
+    horario_final_almoco = models.TimeField(null=True, default='14:00')
