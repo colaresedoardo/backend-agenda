@@ -16,6 +16,7 @@ from datetime import timedelta
 import dotenv
 import django_on_heroku
 from decouple import config
+import cloudinary
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,7 +45,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'rest_framework.authtoken',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -172,5 +174,11 @@ else:
         "http://localhost:3000/",
         "http://127.0.0.1:3000/",
     ]
+
+cloudinary.config(
+    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET'),
+)
 
 django_on_heroku.settings(locals())

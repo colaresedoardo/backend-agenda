@@ -29,9 +29,13 @@ class ClienteSerializer(serializers.ModelSerializer):
         
         
 class ProfissionalSerializer(serializers.ModelSerializer):
+    arquivo = serializers.FileField()
+
     class Meta:
         model = Profissional
-        fields = '__all__'
+        fields = ['nome', 'grupo',
+                  'url_image', 'arquivo']
+    
         
 
 class ConfiguracaoSerializer(serializers.ModelSerializer):
@@ -44,3 +48,11 @@ class GrupoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grupo
         fields = '__all__'
+        
+
+class ProfissionalSerializerVisualizacao(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Profissional
+        fields = ['nome', 'grupo',
+                  'url_image']

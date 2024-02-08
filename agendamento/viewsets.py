@@ -5,7 +5,8 @@ from .models import (Evento, Servico, Cliente,
                      Profissional, Configuracao, Grupo)
 from .serializers import (EventoSerializer, ServicoSerializer,
                           ClienteSerializer, ProfissionalSerializer,
-                          ConfiguracaoSerializer, GrupoSerializer)
+                          ConfiguracaoSerializer, GrupoSerializer,
+                          ProfissionalSerializerVisualizacao)
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import viewsets, serializers
@@ -15,8 +16,8 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ( EventoFilter, ClientFilter, ProfissionalFilter,
                        ConfiguracaoFilter, ServicoFilter)
-from django.contrib.auth.models import Group
 
+from cloudinary import uploader
 
 class ConsultaPublicaPermissao(BasePermission):
     def has_permission(self, request, view):
@@ -129,14 +130,33 @@ class ClienteView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = ClientFilter
 
-    
+
+
 class ProfissionalView(viewsets.ModelViewSet):
     queryset = Profissional.objects.all()
     serializer_class = ProfissionalSerializer
-    permission_classes = [ConsultaPublicaPermissao]
+    permission_classes = [EventoPermissao]
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProfissionalFilter
 
+    def create(self, request, *args, **kwargs):
+        nome = request.data['nome']
+        grupo = request.data['grupo']
+        arquivo = request.FILES['arquivo']
+        grupo = Grupo.objects.get(id=grupo)
+        resultado_upload = uploader.upload(arquivo)
+        url = resultado_upload['url']
+        resultado_model = Profissional(nome=nome, grupo=grupo, url_image=url)
+        resultado_model.save()
+        if resultado_model.id:
+            return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)            
+        return Response({"mensagem": 'Error ao salvar'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ProfissionalSerializerVisualizacao
+        return self.serializer_class
+        
 
 class ConfiguracaolView(viewsets.ModelViewSet):
     queryset = Configuracao.objects.all()

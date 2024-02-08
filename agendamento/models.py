@@ -28,6 +28,7 @@ class Servico(models.Model):
 class Profissional(models.Model):
     nome = models.CharField(max_length=200, default='', null=True)
     grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
+    url_image = models.CharField(max_length=200, default='', null=True)
     def __str__(self):
         return self.nome
 
@@ -54,7 +55,7 @@ class Evento(models.Model):
     
 class Configuracao(models.Model):
     identificador_whatsapp_business = models.CharField(max_length=200,  
-                                                       default='', null=True)
+                                                       default='', null=True,  blank=True)
     intervalo_entre_horario = models.IntegerField(max_length=10, 
                                                   default=30, null=True)
     horario_inicial = models.TimeField(null=True)
