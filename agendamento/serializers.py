@@ -29,13 +29,11 @@ class ClienteSerializer(serializers.ModelSerializer):
         
         
 class ProfissionalSerializer(serializers.ModelSerializer):
-    arquivo = serializers.FileField()
-
+   
     class Meta:
         model = Profissional
-        fields = ['nome', 'grupo',
-                  'url_image', 'arquivo']
-    
+        fields = '__all__'
+        # exclude = ['arquivo']
         
 
 class ConfiguracaoSerializer(serializers.ModelSerializer):
@@ -50,9 +48,11 @@ class GrupoSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 
-class ProfissionalSerializerVisualizacao(serializers.ModelSerializer):
-    
+class ProfissionalSerializerPost(serializers.ModelSerializer):
+    arquivo = serializers.FileField(allow_null=True)
     class Meta:
         model = Profissional
         fields = ['nome', 'grupo',
-                  'url_image']
+                  'url_image',
+                  'arquivo', 'id_imagem']
+      

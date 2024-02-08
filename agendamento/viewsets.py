@@ -6,7 +6,7 @@ from .models import (Evento, Servico, Cliente,
 from .serializers import (EventoSerializer, ServicoSerializer,
                           ClienteSerializer, ProfissionalSerializer,
                           ConfiguracaoSerializer, GrupoSerializer,
-                          ProfissionalSerializerVisualizacao)
+                          ProfissionalSerializerPost)
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import viewsets, serializers
@@ -17,7 +17,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ( EventoFilter, ClientFilter, ProfissionalFilter,
                        ConfiguracaoFilter, ServicoFilter)
 
-from cloudinary import uploader
+from cloudinary import uploader, api
 
 class ConsultaPublicaPermissao(BasePermission):
     def has_permission(self, request, view):
@@ -112,8 +112,12 @@ class ServicoViewSet(viewsets.ModelViewSet):
         grupo_instancia = Grupo.objects.get(identificador=grupo)
         resultados = normalizacao_servico(descricao)
         print(resultados)
+        
+        configuracao = Configuracao.objects.get(grupo=grupo_instancia)
+        intervalo = configuracao.intervalo_entre_horario
         instancias = [Servico(**resultado, usuario=request.user,
-                              grupo=grupo_instancia) for resultado in resultados]
+                              grupo=grupo_instancia, 
+                              tempo_servico=intervalo) for resultado in resultados]
         insercoes = Servico.objects.bulk_create(instancias)
         if len(insercoes):
             return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)    
@@ -135,7 +139,7 @@ class ClienteView(viewsets.ModelViewSet):
 class ProfissionalView(viewsets.ModelViewSet):
     queryset = Profissional.objects.all()
     serializer_class = ProfissionalSerializer
-    permission_classes = [EventoPermissao]
+
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProfissionalFilter
 
@@ -146,15 +150,43 @@ class ProfissionalView(viewsets.ModelViewSet):
         grupo = Grupo.objects.get(id=grupo)
         resultado_upload = uploader.upload(arquivo)
         url = resultado_upload['url']
-        resultado_model = Profissional(nome=nome, grupo=grupo, url_image=url)
+        id_imagem = resultado_upload['public_id']
+        resultado_model = Profissional(nome=nome, grupo=grupo, url_image=url,
+                                       id_imagem=id_imagem)
         resultado_model.save()
         if resultado_model.id:
             return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)            
         return Response({"mensagem": 'Error ao salvar'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
+    
+    
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        arquivo = request.FILES.get('arquivo')
+        resultado_upload = None
+        if arquivo:
+            lista_imagem = []
+            lista_imagem.append(request.data['id_imagem'])
+            api.delete_resources(request.data['id_imagem'],
+                                 resource_type="image", 
+                                 type="upload")
+            resultado_upload = uploader.upload(arquivo)
+            if resultado_upload:
+                instance.url_image = resultado_upload.get('url')
+                instance.id_imagem = resultado_upload.get('public_id')
+        
+        grupo = Grupo.objects.get(id=request.data['grupo'])
+        instance.nome = request.data['nome']
+        instance.grupo = grupo
+        instance.save()
+        return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)  
+    
+    
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return ProfissionalSerializerVisualizacao
+        if self.request.method == 'POST':
+            return ProfissionalSerializerPost
+        if self.request.method == 'PATCH' or self.request.method == 'PUT':
+            return ProfissionalSerializerPost
         return self.serializer_class
         
 
