@@ -107,23 +107,34 @@ class ServicoViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         print("aqui")
         # normalizacao_servico('')
-        descricao = request.data['descricao']
-        grupo = request.data['grupo']
+        nome = request.data.get('nome')
+        grupo = request.data.get('grupo')
+        valor = request.data.get('valor')
+        id = request.data.get("id")
         grupo_instancia = Grupo.objects.get(identificador=grupo)
-        resultados = normalizacao_servico(descricao)
-        print(resultados)
-        
         configuracao = Configuracao.objects.get(grupo=grupo_instancia)
         intervalo = configuracao.intervalo_entre_horario
-        instancias = [Servico(**resultado, usuario=request.user,
-                              grupo=grupo_instancia, 
-                              tempo_servico=intervalo) for resultado in resultados]
-        insercoes = Servico.objects.bulk_create(instancias)
-        if len(insercoes):
-            return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)    
+        if not id:
+            resultado_servico = Servico(nome=nome, valor=valor,
+                                        grupo=grupo_instancia, usuario=request.user, 
+                                        tempo_servico=intervalo)
+            resultado_servico.save()
+            if resultado_servico.id:
+                return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)    
+            else:
+                return Response({"mensagem": 'Falha ao Cadastrar'}, 
+                                status=status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE) 
         else:
-            return Response({"mensagem": 'Falha'}, 
-                            status=status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE) 
+            try:
+                servico = Servico.objects.get(id=id)
+                servico.nome = nome
+                servico.grupo = grupo_instancia
+                servico.valor = valor
+                servico.save()
+                return Response({"mensagem": 'Sucesso'}, status=status.HTTP_200_OK)    
+            except:
+                return Response({"mensagem": 'Falha ao Cadastrar'}, 
+                                status=status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE)           
         # self.serializer_class.save(usuario=self.request.user)
 
 
