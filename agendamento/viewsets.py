@@ -100,7 +100,7 @@ class EventoDetailView(viewsets.ModelViewSet):
 class ServicoViewSet(viewsets.ModelViewSet):
     queryset = Servico.objects.all()
     serializer_class = ServicoSerializer
-    permission_classes = [EventoPermissao, ]
+    permission_classes = [AllowAny, ]
     filter_backends = [DjangoFilterBackend]
     filterset_class = ServicoFilter
     
