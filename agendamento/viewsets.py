@@ -146,11 +146,10 @@ class ClienteView(viewsets.ModelViewSet):
     filterset_class = ClientFilter
 
 
-
 class ProfissionalView(viewsets.ModelViewSet):
     queryset = Profissional.objects.all()
     serializer_class = ProfissionalSerializer
-
+    permission_classes = [AllowAny, ]
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProfissionalFilter
 
