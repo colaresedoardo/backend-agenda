@@ -12,6 +12,8 @@ class Grupo (models.Model):
     
     def __str__(self):
         return self.identificador
+    
+
 class Servico(models.Model):
     nome = models.CharField(max_length=200, default='', null=True)
     valor = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True)
@@ -30,6 +32,8 @@ class Profissional(models.Model):
     grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
     url_image = models.CharField(max_length=200, default='', null=True)
     id_imagem = models.CharField(max_length=200, default='', null=True)
+    telefone = models.CharField(max_length=200, default='', null=True)
+
     def __str__(self):
         return self.nome
 
