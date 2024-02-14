@@ -77,3 +77,5 @@ class Configuracao(models.Model):
     horario_final_almoco = models.TimeField(null=True, default='14:00')
     cor_primaria_tema = ColorField(default='#EF5350', null=True)
     cor_secundaria_tema = ColorField(default='#EF9A9A', null=True)
+    def __str__(self):
+        return self.grupo.identificador
