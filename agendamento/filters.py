@@ -37,8 +37,15 @@ class ProfissionalFilter(django_filters.FilterSet):
         fields = ['grupo__identificador']
 
 
+class CharNotBlankFilter(django_filters.CharFilter):
+    def filter(self, queryset, value):
+        if value.strip() == '':
+            return queryset.none()
+        return super().filter(queryset, value)
+    
+
 class ConfiguracaoFilter(django_filters.FilterSet):
-    grupo__identificador = django_filters.CharFilter(lookup_expr='exact')
+    grupo__identificador = CharNotBlankFilter(lookup_expr='iexact')
     
     class Meta:
         model = Configuracao

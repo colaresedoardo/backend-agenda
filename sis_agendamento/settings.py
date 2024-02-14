@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
-    'django_filters'
+    'django_filters',
+    'colorfield'
 ]
 
 MIDDLEWARE = [

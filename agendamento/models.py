@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import Group
-    
+from colorfield.fields import ColorField    
 
 class Grupo (models.Model):
     usuario = models.ManyToManyField(User, null=True)
@@ -75,3 +75,5 @@ class Configuracao(models.Model):
     trabalho_domingo = models.BooleanField(default=False)
     horario_inicial_almoco = models.TimeField(null=True, default='12:00')
     horario_final_almoco = models.TimeField(null=True, default='14:00')
+    cor_primaria_tema = ColorField(default='#EF5350', null=True)
+    cor_secundaria_tema = ColorField(default='#EF9A9A', null=True)
