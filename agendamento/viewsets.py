@@ -41,6 +41,9 @@ class EventoListCreateView(viewsets.ModelViewSet):
     
 
 class EventoListView(serializers.ModelSerializer):
+    cliente = ClienteSerializer()
+    servico = ServicoSerializer()
+    profissional = ProfissionalSerializer()
     class Meta:
         model = Evento
         fields = ['data_inicio', 'data_fim', 'servico', 'profissional', 

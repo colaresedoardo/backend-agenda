@@ -54,8 +54,9 @@ class Evento(models.Model):
     horario = models.TimeField(null=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING, null=True)
     grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
+    
     def __str__(self):
-        return self.servico.nome
+        return self.cliente.nome + ' - ' + self.servico.nome
     
     
 class Configuracao(models.Model):
